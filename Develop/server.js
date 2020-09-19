@@ -6,7 +6,7 @@ var PORT = process.env.PORT || 8080
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use("/", express.static("./assets"));
+app.use("/assets", express.static("./assets"));
 
 require("./routes/api")(app);
 require("./routes/html")(app);
