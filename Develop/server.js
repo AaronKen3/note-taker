@@ -3,7 +3,7 @@ const express = require("express");
 const path = require("path");
 
 var app = express();
-var PORT = process.env.PORT || 8080
+var PORT = process.env.PORT || 8080;
 const mainPage = path.join(__dirname, "/public");
 
 app.use(express.urlencoded({extended: true}));
