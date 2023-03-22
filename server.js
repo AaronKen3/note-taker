@@ -2,6 +2,8 @@ const fs = require("fs");
 const express = require("express");
 const path = require("path");
 
+const store = require("./db/store");
+
 let app = express();
 let PORT = process.env.PORT || 3001;
 const mainPage = path.join(__dirname, "/public");
@@ -15,28 +17,22 @@ app.get("/notes", function (req, res) {
 });
 
 app.get("/api/notes", function (req, res) {
-  res.sendFile(path.join(__dirname, "./db/db.json"));
+  store
+    .getNotes()
+    .then((notes) => res.json(notes))
+    .catch((err) => res.status(500).json(err));
 });
 
-app.get("/api/notes/:id", function (   req, res) {
-  let savedNotes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
-  res.json(savedNotes[Number(req.params.id)]);
-});
-
-app.get("*", function (req, res) {
-  res.sendFile(path.join(mainPage, "index.html"));
-});
+// app.get("/api/notes/:id", function (req, res) {
+//   let savedNotes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
+//   res.json(savedNotes[Number(req.params.id)]);
+// });
 
 app.post("/api/notes", function (req, res) {
-  let savedNotes = JSON.parse(fs.readFileSync("./db/db.json", "utf8"));
-  let specialId = savedNotes.length.toString();
-  let newNotes = req.body;
-  newNotes.id = specialId;
-  savedNotes.push(newNotes);
-
-  fs.writeFileSync("./db/db.json", JSON.stringify(savedNotes));
-  console.log("Note saved: ", newNotes);
-  res.json(savedNotes);
+  store
+    .addNotes(req.body)
+    .then((note) => res.json(note))
+    .catch((err) => res.status(500).json(err));
 });
 
 app.delete("/api/notes/:id", function (req, res) {
@@ -58,8 +54,10 @@ app.delete("/api/notes/:id", function (req, res) {
   res.json(savedNotes);
 });
 
+app.get("*", function (req, res) {
+  res.sendFile(path.join(mainPage, "index.html"));
+});
+
 app.listen(PORT, function () {
   console.log("App listening on PORT " + PORT);
 });
-
-

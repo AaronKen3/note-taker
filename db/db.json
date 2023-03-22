@@ -1,1 +1,4 @@
-[]
+[
+  { "title": "First note", "text": "second note\n", "id": "8709bc91-94b7-4940-b468-b4ca32ce3eab" },
+  { "title": "Secondnote", "text": "Aaron", "id": "25031c0e-d4e9-43cd-b5ee-3fb3348ceb68" }
+]
